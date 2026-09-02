@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACK 4</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background-color: #f3f2f1;
+            margin: 0;
+            padding: 0;
+            color: #323130;
+        }
+
+        .header-bg {
+            background-color: #E7C05E; /* Teal MS Forms style */
+            height: 140px;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 0 2px rgba(0,0,0,0.05);
+            padding: 40px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .card-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #008272;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 0;
+            color: #323130;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #605e5c;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .required-notice {
+            color: #a4262c;
+            font-size: 13px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        label.main-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .required-asterisk {
+            color: #a4262c !important;
+            margin-left: 4px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 400px;
+            border: none;
+            border-bottom: 1px solid #a19f9d;
+            padding: 8px 0;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-bottom: 2px solid #008272;
+        }
+
+        .question-card {
+            margin-bottom: 35px;
+            border-bottom: 1px solid #f3f2f1;
+            padding-bottom: 20px;
+        }
+
+        .question-card:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .option-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            position: relative;
+            padding-left: 30px;
+            user-select: none;
+            line-height: 1.3;
+        }
+
+        .option-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 1px;
+            left: 0;
+            height: 18px;
+            width: 18px;
+            background-color: #fff;
+            border: 1px solid #8a8886;
+            border-radius: 50%;
+        }
+
+        .option-container:hover input ~ .checkmark {
+            background-color: #f3f2f1;
+        }
+
+        .option-container input:checked ~ .checkmark {
+            border-color: #008272;
+            background-color: #fff;
+        }
+
+        .checkmark::after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .option-container input:checked ~ .checkmark::after {
+            display: block;
+        }
+
+        .option-container .checkmark::after {
+            top: 4px;
+            left: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #008272;
+        }
+
+        .btn-submit {
+            background-color: #008272;
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+
+        .btn-submit:hover {
+            background-color: #00695c;
+        }
+
+        .btn-submit:disabled {
+            background-color: #c8c6c4;
+            color: #a19f9d;
+            cursor: not-allowed;
+        }
+
+        /* Results UI */
+        .results-header {
+            text-align: center;
+            border-bottom: 1px solid #e1dfdd;
+            padding-bottom: 25px;
+            margin-bottom: 25px;
+        }
+
+        .score-badge {
+            display: inline-block;
+            background-color: #008272;
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin: 15px 0;
+        }
+
+        .score-legend {
+            font-size: 16px;
+            color: #323130;
+            font-weight: 600;
+        }
+
+        .feedback-item {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 4px;
+            background-color: #faf9f8;
+            border-left: 4px solid #a19f9d;
+        }
+
+        .feedback-item.correct {
+            border-left: 4px solid #107c41;
+            background-color: #f1faf1;
+        }
+
+        .feedback-item.incorrect {
+            border-left: 4px solid #a4262c;
+            background-color: #fdf3f4;
+        }
+
+        .feedback-status {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-correct { color: #107c41; }
+        .status-incorrect { color: #a4262c; }
+
+        .feedback-text {
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 12px;
+            background: #ffffff;
+            border: 1px dashed #d2d0ce;
+            border-radius: 4px;
+            color: #323130;
+            line-height: 1.45;
+        }
+
+        .feedback-title {
+            font-weight: bold;
+            color: #008272;
+            margin-bottom: 4px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .user-answer {
+            font-size: 14px;
+            margin: 6px 0;
+        }
+
+        .correct-answer-display {
+            font-size: 14px;
+            font-weight: 600;
+            color: #107c41;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-bg"></div>
+
+    <div class="container">
+        <!-- FORMULARIO DE EXAMEN -->
+        <form id="quizForm">
+            <!-- PASO 1: RECOLECCIÓN DE NOMBRE -->
+            <div class="card card-header" id="step1Card">
+                <h1>TRACK 4</h1>
+                <div class="description">
+                    Bienvenido a la evaluación del Track 4. Por favor, ingresa tu nombre completo para iniciar. El sistema seleccionará 10 preguntas aleatorias del banco general.
+                </div>
+                <div class="required-notice">* Obligatorio</div>
+                
+                <div class="form-group">
+                    <label class="main-label" for="nombre">Nombre Completo<span class="required-asterisk">*</span></label>
+                    <input type="text" id="nombre" required placeholder="Escriba su respuesta">
+                </div>
+
+                <button type="button" id="startBtn" class="btn-submit">Comenzar Examen</button>
+            </div>
+
+            <!-- PASO 2: PREGUNTAS DEL EXAMEN -->
+            <div id="step2Card" style="display: none;">
+                <div class="card card-header">
+                    <h2 style="margin: 0; font-size: 20px; color: #323130;">Preguntas de Evaluación</h2>
+                    <p style="font-size: 13px; color: #605e5c; margin-top: 5px; margin-bottom: 0;">
+                        Responde las 10 preguntas a continuación.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div id="questionsContainer"></div>
+                </div>
+
+                <div style="margin-bottom: 40px;">
+                    <button type="submit" id="submitBtn" class="btn-submit">Enviar respuestas</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- PASO 3: RESULTADOS Y RETROALIMENTACIÓN -->
+        <div class="card" id="successCard" style="display: none;">
+            <div class="results-header">
+                <h1 style="color: #008272; margin-bottom: 10px;">¡Examen Finalizado!</h1>
+                <p>Tus respuestas han sido procesadas e ingresadas con éxito en el sistema.</p>
+                
+                <div class="score-badge" id="scoreValue">0 / 100</div>
+                <div class="score-legend" id="scoreText">Puntaje obtenido</div>
+            </div>
+
+            <h3 style="margin-top: 30px; font-size: 18px; border-bottom: 2px solid #008272; padding-bottom: 8px;">
+                Revisión y Retroalimentación Pedagógica
+            </h3>
+            
+            <div id="feedbackContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxww_PMl2sWKb7k5mtwoV48FAnaEstFzIb4A2zn_9GhXrv8vkEKxyk_aq4KAI2gbMOn6Q/exec";
+
+        // Banco completo de preguntas del Track 4
+        const questionBank = [
+            { id: 1, text: "Durante una práctica, una sola persona del equipo opera la tablet y escribe todos los prompts mientras el resto mira. ¿Qué principio del Track 1 se está rompiendo y cuál es la corrección?", options: ["Participación · cada integrante escribe y decide; quien aporta el caso de faena y quien tiene soltura digital se turnan en la operación.", "Horizontalidad · se le pide al de mayor jerarquía que asigne los roles.", "Flexibilidad · se ajusta el cronograma para darle más tiempo a ese equipo.", "Trazabilidad · basta con anotar quién operó la herramienta en la ficha."], correct: 0, feedback: "El principio que se rompe es la Participación: cada integrante debe escribir y decidir, alternando entre quien aporta el caso de faena y quien tiene soltura digital." },
+            { id: 2, text: "De los cuatro componentes del Reto Final, ¿cuál se ensaya hoy en la sala pero recién se presenta el día del Challenge?", options: ["La ficha de diseño.", "El storyboard actualizado.", "El recurso digital.", "La demostración en vivo: la microfacilitación de 7 minutos ante el grupo."], correct: 3, feedback: "De los cuatro componentes del Reto Final, la demostración en vivo —la microfacilitación de 7 minutos— se presenta recién el día del Challenge, no se ensaya antes en la sala." },
+            { id: 3, text: "Tu equipo eligió producir un video formativo como recurso digital. ¿Cuál es el límite oficial y con qué recetas del anexo se produce?", options: ["3 minutos · receta B3.", "90 segundos · recetas B1 + B2.", "5 minutos · receta N2.", "60 segundos · receta B4."], correct: 1, feedback: "El video formativo del reto tiene un límite oficial de 90 segundos y se produce combinando las recetas B1 y B2 del anexo." },
+            { id: 4, text: "Vas a preparar una charla sobre bloqueo y tarjeteo. Tienes el procedimiento vigente de Los Pelambres, en la versión oficial que ya se entrega a contratistas. Según el semáforo, ¿qué corresponde?", options: ["Zona verde: entra directo,", "Zona amarilla: todo documento interno debe anonimizarse por completo antes de entrar a la IA. revisando siempre antes que la copia no traiga firmas ni datos personales, y verificando cada dato técnico contra la fuente.", "Zona roja: se trabaja con el documento fuera de la IA.", "Depende de la herramienta: en una es verde y en otra es rojo."], correct: 1, feedback: "Un documento interno como este corresponde a zona amarilla: entra a la IA, pero siempre anonimizado, sin firmas ni datos personales, y verificando cada dato técnico contra la fuente." },
+            { id: 5, text: "Un compañero quiere usar como caso de aprendizaje un informe de investigación de incidente que incluye el nombre del operador, su cargo y la fecha exacta del turno. ¿Cuál es la salida correcta?", options: ["Se pega tal cual, porque es material interno de la empresa.", "Se pega solo la parte técnica, dejando el nombre para dar contexto real.", "Se descarta: un incidente queda fuera de cualquier material formativo.", "Se anonimiza primero —nombres, RUT, cargos, fechas exactas y ubicaciones— y así pasa a ser un caso de zona amarilla."], correct: 3, feedback: "Los datos personales (nombre, cargo, fecha exacta) deben anonimizarse primero —nombres, RUT, cargos, fechas y ubicaciones— antes de usarse como caso de zona amarilla." },
+            { id: 6, text: "La IA te entrega una lámina que afirma que la presión de trabajo del sistema es de 210 bar. Revisas el procedimiento adjunto y esa cifra no aparece en ninguna parte del documento. ¿Qué problema es y qué haces?", options: ["Sesgo: se cambia el ejemplo por uno más representativo de la faena.", "Alucinación: se contrasta contra el documento fuente y, si está ausente, se borra. Siempre se verifica.", "Falso contexto: se revisa si la norma corresponde a otro país.", "Error de formato: se le pide que reescriba la lámina con otras palabras."], correct: 1, feedback: "Cuando una cifra no aparece en el documento fuente, se trata de una alucinación: se contrasta contra la fuente y, si está ausente, se borra. Siempre se verifica." },
+            { id: 7, text: "Revisas tu presentación terminada y notas que en los cuatro ejemplos el operador experto es un hombre joven, y la única mujer aparece en un rol administrativo. ¿Qué corresponde?", options: ["Dejarlo así: la pieza refleja la composición actual de la faena.", "Es sesgo: se revisa a propósito quién aparece en los ejemplos y se corrige. Los Sesgos en su mayoría están asociados a edad, género, a condiciones humanas.", "Es alucinación: se verifica si esas personas existen en la operación.", "Es falso contexto: se revisa de qué país proviene el ejemplo."], correct: 1, feedback: "La falta de diversidad en los ejemplos (solo hombres jóvenes como expertos) es sesgo: se revisa a propósito quién aparece en los ejemplos y se corrige." },
+            { id: 8, text: "La IA cita una norma de seguridad de otra industria y de otro país, y la presenta como si fuera la que rige en tu faena. ¿Cómo se llama el problema y cómo se filtra?", options: ["Alucinación · se contrasta la cifra contra el documento adjunto.", "Sesgo · se equilibra quién aparece en los ejemplos.", "Falso contexto · se verifica la vigencia y el alcance de toda referencia normativa; si no aplica, se consulta y se elimina.", "Error de trazabilidad · se anota qué prompt se usó para generarla."], correct: 2, feedback: "Citar una norma de otra industria u otro país como si aplicara a la faena es falso contexto: se verifica la vigencia y el alcance de toda referencia normativa." },
+            { id: 9, text: "Terminaste tu infografía, verificaste cada cifra contra el procedimiento y aplicaste el semáforo. Quieres darla por cerrada, y hasta ahora eres la única persona que la ha leído. ¿Qué punto del checklist queda pendiente?", options: ["Un par distinto al autor la leyó y la entendió sin explicación adicional.", "Datos contrastados.", "Fuente autorizada.", "Semáforo aplicado."], correct: 0, feedback: "Antes de cerrar un entregable, el checklist exige que un par distinto al autor lo lea y lo entienda sin explicación adicional." },
+            { id: 10, text: "El punto de trazabilidad del checklist, en un entregable producido con IA, exige dejar registro de:", options: ["El nombre del archivo y su fecha de creación.", "El área que solicitó el material y su jefatura.", "La cantidad de láminas y su duración estimada.", "La fuente, la herramienta usada, el prompt y quién validó."], correct: 3, feedback: "El punto de trazabilidad del checklist exige dejar registro de la fuente, la herramienta usada, el prompt y quién validó el entregable." },
+            { id: 11, text: "En la demostración, Copilot entrega la primera versión de tu presentación. ¿Qué corresponde hacer inmediatamente después?", options: ["Guardarla y compartirla con el equipo para avanzar más rápido.", "Pedirle de inmediato una segunda versión más corta.", "Leerla completa, corregirla y contrastar cada dato técnico contra la fuente.", "Aplicarle diseño con Designer y leerla al final, ya maquetada."], correct: 2, feedback: "Después de recibir una primera versión de la IA, corresponde leerla completa, corregirla y contrastar cada dato técnico contra la fuente antes de avanzar." },
+            { id: 12, text: "Acabas de crear tu cuaderno NotebookLM y de subir tres fuentes ya pasadas por el semáforo. ¿Cuál es la primera petición que corresponde hacerle?", options: ["Que redacte de inmediato el capítulo 1 del manual.", "Que diga de qué tratan las fuentes y qué temas quedan fuera de ellas, antes de pedirle contenido. Educar a la IA siempre.", "Que genere el resumen en audio para escucharlo en el bus.", "Que proponga cinco preguntas de evaluación para el cierre."], correct: 1, feedback: "La primera petición a un cuaderno recién creado en NotebookLM es pedirle que diga de qué tratan las fuentes y qué temas quedan fuera, antes de solicitar contenido." },
+            { id: 13, text: "Le preguntas a NotebookLM por una cifra de otra faena que no cargaste en ninguna fuente, y responde “no se menciona en los documentos proporcionados”. ¿Qué demuestra esa respuesta?", options: ["Que la herramienta responde solo con lo que le entregaste: es la prueba de que trabaja con tus fuentes.", "Que el cuaderno de NotebookLM quedó mal configurado y conviene rehacerlo.", "Que conviene subir veinte documentos por si acaso.", "Que corresponde repetir la pregunta en otra herramienta y usar esa respuesta."], correct: 0, feedback: "Que NotebookLM responda 'no se menciona en los documentos proporcionados' demuestra que la herramienta trabaja únicamente con las fuentes que se le entregaron." },
+            { id: 14, text: "Un supervisor escribe este encargo: “Hazme una presentación sobre bloqueo, que quede clara y ordenada.” ¿Qué corrección cambia más el resultado?", options: ["Pedirle que use un lenguaje más formal y técnico.", "Enviar el mismo encargo tres veces y quedarse con la mejor versión.", "Pedirle que agregue una lámina de agenda al inicio.", "Agregar el Rol (“Actúa como…”) y Topes contables: número exacto de láminas y de palabras por viñeta."], correct: 3, feedback: "Agregar el Rol ('Actúa como…') y Topes contables (número exacto de láminas y palabras por viñeta) es la corrección que más cambia el resultado de un encargo ambiguo." },
+            { id: 15, text: "La “A” de la RECETA —Aprobación— consiste en:", options: ["Pedir autorización a la jefatura antes de usar la herramienta.", "Indicarle a la IA cómo debe revisarse a sí misma antes de entregarte la respuesta.", "Verificar la pieza final aplicando el checklist de cinco puntos.", "Confirmar que la herramienta está autorizada por la empresa."], correct: 1, feedback: "La 'A' de Aprobación en la RECETA consiste en indicarle a la IA cómo debe revisarse a sí misma antes de entregar la respuesta." },
+            { id: 16, text: "El radar de audiencia (H3 del Track 2) —cargo, turno, años en faena, escolaridad, soltura digital— entra en tu prompt dentro de:", options: ["El Encargo, como verbo de acción.", "Los Topes, como límite de palabras.", "El Contexto: dónde ocurre y para quién es.", "El Ejemplo, como muestra del nivel esperado."], correct: 2, feedback: "El radar de audiencia (cargo, turno, años en faena, escolaridad, soltura digital) entra en el prompt como parte del Contexto: dónde ocurre y para quién es." },
+            { id: 17, text: "Necesitas producir un capítulo de manual técnico donde cada afirmación pueda rastrearse hasta el procedimiento vigente. ¿Por dónde partes y por qué?", options: ["NotebookLM, porque responde solo con las fuentes cargadas y cita documento y página.", "Designer, porque genera las ilustraciones técnicas del equipo.", "Copilot en Word, porque redacta más rápido y con mejor estilo.", "Copilot en PowerPoint, porque arma la estructura completa de una sola vez."], correct: 0, feedback: "Para un manual técnico donde cada afirmación debe rastrearse hasta el procedimiento, NotebookLM es el punto de partida porque responde solo con las fuentes cargadas y cita documento y página." },
+            { id: 18, text: "Quieres ilustrar el arnés y el punto de anclaje reales que usa tu cuadrilla, y piensas generarlos con Designer o Diseñador de imagenes. ¿Qué corresponde?", options: ["Generarlos: ahorra tiempo y el resultado se ve profesional.", "Generarlos siempre que la imagen vaya acompañada de un texto explicativo.", "Generarlos y después pedirle a la propia IA que verifique el detalle técnico.", "Usar fotografías reales de la faena: una ilustración parecida al equipo confunde en material de seguridad."], correct: 3, feedback: "Para ilustrar equipos reales de seguridad, corresponde usar fotografías reales de la faena: una ilustración generada por IA que se parece al equipo puede confundir en material de seguridad." },
+            { id: 19, text: "En tu equipo hay un supervisor y dos operadores. Al momento de elegir la escena del storyboard, el supervisor decide solo y el resto asiente sin decir nada. ¿Qué corresponde hacer?", options: ["Dejarlo así: alguien tiene que decidir y el supervisor conoce mejor esa área.", "Devolver la decisión al equipo: quien sabe de faena y quien sabe de método valen igual.", "Cambiar al supervisor de equipo para evitar que vuelva a ocurrir en la tarde.", "Pedirle al supervisor que explique su decisión al resto y continuar con la práctica."], correct: 1, feedback: "Cuando el supervisor decide solo, corresponde devolver la decisión al equipo: quien sabe de faena y quien sabe de método valen igual." },
+            { id: 20, text: "Faltan diez minutos para cerrar una práctica. Un equipo ya terminó su entregable y otro va a medio camino. ¿Qué corresponde?", options: ["Cerrar la práctica ahora: el ritmo lo marca el equipo que va más rápido.", "Pedir al equipo que terminó que produzca la pieza del equipo que va atrasado.", "Extender la práctica veinte minutos y recortar el repaso general del cierre.", "Sostener el mínimo entregable igual para todos, con un extra opcional para quien ya terminó."], correct: 3, feedback: "Ante ritmos distintos entre equipos, se sostiene el mínimo entregable igual para todos, con un extra opcional para quien ya terminó." },
+            { id: 21, text: "Tu equipo produjo un video muy bien editado sobre el uso del arnés. Al preguntarles qué función cumple dentro del storyboard, responden que “sirve para que quede más entretenido”. ¿Qué falta?", options: ["Falta definir su función formativa: activar, explicar, modelar, contextualizar, practicar, retroalimentar o transferir.", "Falta subir la calidad de edición para que se vea profesional ante el grupo.", "Falta música y subtítulos: sin eso la atención se cae antes del final.", "Falta acortarlo a 60 segundos para que entre dentro del límite del reto."], correct: 0, feedback: "A todo recurso (como un video) le falta definir su función formativa: activar, explicar, modelar, contextualizar, practicar, retroalimentar o transferir." },
+            { id: 22, text: "Tu equipo tiene entusiasmo y quiere producir un video, una infografía y un quiz para el mismo reto. Mirando cómo se evalúa el Challenge, ¿qué conviene?", options: ["Producir los tres: más piezas demuestran más dominio de las herramientas vistas hoy.", "Producir los tres y verificar solo el que quede mejor, por un tema de tiempo.", "Elegir un solo formato y hacerlo bien: tres piezas medias pierden más puntos que una pieza buena.", "Producir dos y presentar el tercero como idea el día del Challenge."], correct: 2, feedback: "Según cómo se evalúa el Challenge, conviene elegir un solo formato y hacerlo bien: tres piezas medias pierden más puntos que una pieza buena." },
+            { id: 23, text: "Quieres que los operadores exploren un mapa de riesgos haciendo clic en cada zona para ver su detalle, en vez de leer una lámina. Entre las herramientas mostradas en la mañana, ¿cuál corresponde y qué entrega?", options: ["Canva: entrega un PDF descargable con todas las zonas ya visibles en la lámina.", "Genially: no descarga un archivo, entrega un enlace vivo o un código de inserción.", "Designer: entrega la ilustración del mapa de riesgos lista para imprimir.", "Copilot en PowerPoint: entrega una presentación de cinco láminas con las zonas explicadas."], correct: 1, feedback: "Para una exploración interactiva por zonas sin descargar un archivo, la herramienta correcta es Genially, que entrega un enlace vivo o un código de inserción." },
+            { id: 24, text: "Vas a crear tu cuaderno NotebookLM para el manual de bloqueo y tarjeteo. Tienes el procedimiento vigente, dos instructivos del área y quince documentos más de otros temas que “podrían servir”. ¿Qué corresponde?", options: ["Un cuaderno en NotebookLM por manual, con entre 2 y 6 fuentes ya pasadas por el semáforo.", "Subir los dieciocho documentos: mientras más fuentes, más completa queda la respuesta.", "Subir todo en el mismo cuaderno y filtrar después con preguntas bien dirigidas.", "Crear el cuaderno sin fuentes y pedirle que redacte con lo que ya sabe del tema."], correct: 0, feedback: "Para NotebookLM corresponde crear un cuaderno por manual, con entre 2 y 6 fuentes ya pasadas por el semáforo, no subir documentos de más." },
+            { id: 25, text: "Le pediste a IA y/o Copilot una ficha de diseño con rol, encargo, contexto, topes y línea de aprobación. La entrega es correcta, pero el nivel de detalle queda muy por debajo del que usa tu área. ¿Qué paso de la RECETA falta?", options: ["Falta el Rol: hay que pedirle que actúe como diseñador instruccional para minería.", "Falta el Contexto: hay que describirle mejor el turno y la faena donde ocurre.", "Falta ajustar los Topes: hay que exigirle más palabras por fila de la tabla.", "Falta el Ejemplo: se le entrega una ficha ya aprobada para que imite ese nivel de detalle."], correct: 3, feedback: "Cuando el nivel de detalle queda bajo el estándar del área, falta el Ejemplo: se le entrega una ficha ya aprobada para que la IA imite ese nivel de detalle." },
+            { id: 26, text: "Tienes una charla de ocho láminas en texto plano y quieres convertirla en el video de 90 segundos del reto, sin cámara, sin estudio y sin presupuesto. Según el caso del Bloque 04, ¿cómo se produce?", options: ["Se graba a alguien leyendo las ocho láminas y se acelera el video hasta que entre en 90 segundos.", "Se le pide a Designer que genere el video completo a partir del texto de la charla.", "Receta B2: guion narrado en bloques de 15 segundos, de 210 a 230 palabras, frases de máximo 15.", "Se encarga la locución fuera del equipo y se sube el archivo terminado a la intranet."], correct: 2, feedback: "Para producir un video de 90 segundos sin cámara ni estudio, corresponde la receta B2: guion narrado en bloques de 15 segundos, de 210 a 230 palabras, frases de máximo 15." },
+            { id: 27, text: "Tu cuaderno de NotebookLM redactó un capítulo impecable, con citas exactas a cada página. Al revisar la portada de la fuente notas que ese procedimiento fue derogado el año pasado. ¿Qué corresponde?", options: ["Reemplazar la fuente por la versión vigente y volver a redactar el capítulo.", "Publicarlo igual: las citas están correctas y apuntan a la página real del documento.", "Publicarlo con una nota al pie advirtiendo que la fuente podría estar desactualizada.", "Pedirle al cuaderno que actualice por su cuenta el contenido a la norma vigente."], correct: 0, feedback: "Si la fuente citada fue derogada, corresponde reemplazarla por la versión vigente y volver a redactar el capítulo, no dejarlo con una nota o pedirle a la IA que se autoactualice." },
+            { id: 28, text: "Estás desarrollando tu capítulo en NotebookLM. Trae doce citas y el tiempo apremia. ¿Qué corresponde hacer?", options: ["Confiar en las citas: la herramienta apunta siempre a la página correcta del documento.", "Revisar tres citas al azar y, si están bien, dar por buenas las demás del capítulo.", "Abrir cada cita de dato técnico y comprobar la frase contra la página, sin excepción.", "Pedirle al propio cuaderno que verifique sus citas y aceptar la respuesta que entregue."], correct: 2, feedback: "Con múltiples citas y poco tiempo, corresponde abrir cada cita de dato técnico y comprobar la frase contra la página, sin excepción." },
+            { id: 29, text: "Le pediste a Copilot una infografía de trabajo en altura adjuntando el procedimiento. La pieza afirma que el arnés debe reemplazarse cada 5 años. Buscas “reemplazo” en el procedimiento adjunto y no aparece ningún plazo. Un compañero propone preguntarle a la propia IA si esa cifra es correcta. ¿Qué corresponde?", options: ["Preguntarle a la IA: si confirma la cifra, se deja.", "Dejar la cifra: es un valor de uso común en la industria.", "Dejar la cifra, marcándola como “referencial” en la infografía.", "Es alucinación: se contrasta contra el documento fuente y, si no está ahí, se borra — la verificación la hace una persona, no la herramienta consigo misma."], correct: 3, feedback: "Cuando una cifra no aparece en el documento fuente, es alucinación: se contrasta contra la fuente y se borra si no está ahí. La verificación la hace una persona, no la IA sobre sí misma." },
+            { id: 30, text: "La IA cita un decreto que existe de verdad y está vigente, pero que regula otra actividad, y lo presenta como el que rige tu tarea. Un compañero dice que es una alucinación. ¿Tiene razón?", options: ["Sí: cualquier referencia equivocada es una alucinación.", "Sí, salvo que el decreto aparezca mencionado en alguna de las fuentes cargadas.", "No: es falso contexto. La referencia existe y está vigente; lo que falla es su alcance, y por eso se verifica vigencia y aplicabilidad.", "No: mientras el decreto esté vigente, puede citarse como referencia complementaria."], correct: 2, feedback: "Citar un decreto vigente pero que regula otra actividad es falso contexto, no alucinación: la referencia existe y está vigente, pero falla su alcance, por eso se verifica vigencia y aplicabilidad." }
+        ];
+
+        let selectedQuestions = [];
+
+        // PASO 1 -> PASO 2: Validar nombre y generar las 10 preguntas aleatorias
+        document.getElementById('startBtn').addEventListener('click', function() {
+            const nombreVal = document.getElementById('nombre').value.trim();
+            if (!nombreVal) {
+                alert('Por favor, ingresa tu Nombre Completo para continuar.');
+                document.getElementById('nombre').focus();
+                return;
+            }
+
+            // Ocultar Paso 1 y mostrar Paso 2
+            document.getElementById('step1Card').style.display = 'none';
+            document.getElementById('step2Card').style.display = 'block';
+
+            // Cargar y aleatorizar 15 preguntas
+            initQuiz();
+            window.scrollTo(0, 0);
+        });
+
+        // Inicializar examen con 15 preguntas aleatorias de la lista
+        function initQuiz() {
+            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            selectedQuestions = shuffled.slice(0, 10);
+            
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            selectedQuestions.forEach((q, index) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'question-card';
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, optIndex) => {
+                    optionsHTML += `
+                        <label class="option-container">${opt}
+                            <input type="radio" name="q_${q.id}" value="${optIndex}" required>
+                            <span class="checkmark"></span>
+                        </label>
+                    `;
+                });
+
+                qDiv.innerHTML = `
+                    <div class="question-text">
+                        ${index + 1}. ${q.text} <span class="required-asterisk">*</span>
+                    </div>
+                    ${optionsHTML}
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        // Manejar el envío final de respuestas
+        document.getElementById('quizForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Enviando respuestas...";
+
+            const nombre = document.getElementById('nombre').value.trim();
+            const hora = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' }) || new Date().toLocaleString();
+            
+            let correctCount = 0;
+            let listadoPreguntasArr = [];
+            let userAnswers = {};
+
+            selectedQuestions.forEach(q => {
+                listadoPreguntasArr.push(q.id);
+                const selectedOpt = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                const answerVal = selectedOpt ? parseInt(selectedOpt.value) : -1;
+                userAnswers[q.id] = answerVal;
+                
+                if (answerVal === q.correct) {
+                    correctCount++;
+                }
+            });
+
+            // Calificación en escala de 0 a 100 puntos (15 preguntas)
+            const calificacion = Math.round((correctCount / 10) * 100);
+            const listadoPreguntas = listadoPreguntasArr.join(',');
+
+            // Enviar datos por POST
+            const payload = {
+                nombre: nombre,
+                hora: hora,
+                calificacion: calificacion,
+                listadoPreguntas: listadoPreguntas
+            };
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                document.getElementById('quizForm').style.display = 'none';
+                
+                const successCard = document.getElementById('successCard');
+                successCard.style.display = 'block';
+                
+                const scoreValue = document.getElementById('scoreValue');
+                scoreValue.innerText = `${calificacion} / 100`;
+                
+                if (calificacion >= 70) {
+                    scoreValue.style.backgroundColor = "#107c41";
+                    document.getElementById('scoreText').innerText = "¡Felicidades, examen aprobado!";
+                } else {
+                    scoreValue.style.backgroundColor = "#a4262c";
+                    document.getElementById('scoreText').innerText = "Examen no aprobado. Sigue practicando.";
+                }
+
+                buildFeedbackUI(userAnswers);
+                window.scrollTo(0,0);
+            })
+            .catch(error => {
+                console.error('Error al enviar las respuestas:', error);
+                alert('Ocurrió un inconveniente al registrar tus respuestas. Por favor, reintenta el envío.');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Enviar respuestas";
+            });
+        });
+
+        // Construir la sección de retroalimentación
+        function buildFeedbackUI(userAnswers) {
+            const feedbackContainer = document.getElementById('feedbackContainer');
+            feedbackContainer.innerHTML = '';
+
+            selectedQuestions.forEach((q, index) => {
+                const userAnswerIndex = userAnswers[q.id];
+                const isCorrect = userAnswerIndex === q.correct;
+                const feedbackDiv = document.createElement('div');
+                
+                feedbackDiv.className = `feedback-item ${isCorrect ? 'correct' : 'incorrect'}`;
+
+                let statusHTML = '';
+                if (isCorrect) {
+                    statusHTML = `
+                        <div class="feedback-status status-correct">
+                            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            Pregunta ${index + 1}: Correcta
+                        </div>
+                    `;
+                } else {
+                    statusHTML = `
+                        <div class="feedback-status status-incorrect">
+                            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                            Pregunta ${index + 1}: Incorrecta
+                        </div>
+                    `;
+                }
+
+                const selectedText = userAnswerIndex !== -1 ? q.options[userAnswerIndex] : "Ninguna opción seleccionada";
+                const correctText = q.options[q.correct];
+
+                feedbackDiv.innerHTML = `
+                    ${statusHTML}
+                    <div style="font-weight: 600; font-size: 15px; margin-bottom: 10px;">${q.text}</div>
+                    <div class="user-answer">
+                        <strong>Tu respuesta:</strong> <span style="color: ${isCorrect ? '#107c41' : '#a4262c'}">${selectedText}</span>
+                    </div>
+                    ${!isCorrect ? `<div class="correct-answer-display"><strong>Respuesta correcta:</strong> ${correctText}</div>` : ''}
+                    
+                    <div class="feedback-text">
+                        <div class="feedback-title">Refuerzo Educativo</div>
+                        ${q.feedback}
+                    </div>
+                `;
+
+                feedbackContainer.appendChild(feedbackDiv);
+            });
+        }
+    </script>
+</body>
+</html>
